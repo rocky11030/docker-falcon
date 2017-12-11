@@ -1,0 +1,60 @@
+---
+- name: copy mysql docker images
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - {src: 'mysql_5.5.tar', dest: '/tmp/mysql_5.5.tar'}
+  tags:
+    - docker1
+
+- name: docker import zabbix_server images
+  shell: docker load -i {{ item }}
+  with_items:
+    - /tmp/mysql_5.5.tar
+
+- name: create mysql_data directory
+  file: path={{ mysql_data_path }} state=directory recurse=yes
+  tags:
+    - docker1
+
+- name: create mysql docker container
+  docker_container:
+    name: "{{ mysql_dockername }}"
+    image: mysql:5.5
+    detach: True
+    ports:
+      - "3306:3306"
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ root_passwd }}"
+      MYSQL_ROOT_HOST: "{{ root_host }}"
+     # MYSQL_DATABASE: "{{ database }}"
+      DB_SERVICE_PORT: "{{ database_port }}"
+    volumes:
+      - "{{ mysql_data_path }}:/var/lib/mysql"
+  tags:
+    - docker_mysql      
+      
+- name: sleep 10s
+  shell: sleep 10
+
+- name: copy mysql init database
+  copy:
+    src: db_schema
+    dest: /tmp
+    directory_mode: yes
+  tags:
+    - docker5
+
+- name: copy db_infor to docker
+  shell: docker cp  /tmp/db_schema {{ mysql_dockername }}:/tmp
+  tags:
+    - docker5
+  
+
+- name: init open-falcon database
+  shell: docker exec {{ mysql_dockername }} bash /tmp/db_schema/init.sh
+  tags:
+    - docker5
+
+
+

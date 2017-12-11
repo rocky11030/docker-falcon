@@ -1,0 +1,5 @@
+---
+- hosts: falcon
+  user: root
+  roles:
+    - falcon_install

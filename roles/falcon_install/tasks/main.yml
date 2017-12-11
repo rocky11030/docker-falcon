@@ -1,0 +1,9 @@
+---
+- import_tasks: mysql_install.yml
+  tags:
+    - mysql_install
+
+- import_tasks: falcon_install.yml
+  tags:
+    - falcon_install
+

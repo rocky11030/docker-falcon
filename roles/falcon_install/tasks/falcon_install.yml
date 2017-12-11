@@ -1,0 +1,65 @@
+---
+- name: copy mysql docker images
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - {src: 'falcon_0.2.1.tar', dest: '/tmp/falcon_0.2.1.tar'}
+  tags:
+    - docker1
+
+- name: docker import open-falcon images
+  shell: docker load -i {{ item }}
+  with_items:
+    - /tmp/falcon_0.2.1.tar
+
+
+- name: rm falcon.tar
+  shell: rm -rf /tmp/falcon_0.2.1.tar
+
+- name: create mysql_data directory
+  file: path={{ falcon_data_path }} state=directory recurse=yes
+  tags:
+    - docker1
+
+- name: unarchive the falcon-data
+  unarchive:
+    src: data.tar.gz
+    dest: "{{ falcon_data_path }}"
+
+- name: create falcon container
+  docker_container:
+    name: "{{ falcon_dockername }}"
+    image: falcon:v1
+    detach: True
+    tty: yes 
+    network_mode: host
+    command: /bin/bash
+    volumes:
+      - "{{ falcon_data_path }}:/opt/open-falcon/data"
+  tags:
+    - docker_mysql      
+      
+- name: sleep 10s
+  shell: sleep 10
+
+- name: copy falcon init database
+  template:
+    src: init_database.sh
+    dest: /tmp/init_database.sh
+  tags:
+    - falcon
+
+- name: copy  modify_database.sh to docker
+  shell: docker cp  /tmp/init_database.sh  {{ falcon_dockername }}:/tmp
+  tags:
+    - falcon
+  
+- name: start init_data 
+  shell: docker exec {{ falcon_dockername }} bash /tmp/init_database.sh
+
+- name: start open-falcon
+  shell: docker exec {{ falcon_dockername }} bash /scripts/startup.sh
+  tags:
+    - falcon2
+
+
+
