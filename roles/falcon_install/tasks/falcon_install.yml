@@ -35,6 +35,7 @@
     command: /bin/bash
     volumes:
       - "{{ falcon_data_path }}:/opt/open-falcon/data"
+      - "/etc/localtime:/etc/localtime:ro"
   tags:
     - docker_mysql      
       
