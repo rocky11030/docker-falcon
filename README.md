@@ -6,6 +6,8 @@
 - 此项目主要是通过ansible+docker安装open-falcon_0.2.1版本
 - falcon_0.2.1.tar和mysql_5.5.tar需要手动上传
 - ansible版本为2.4
+- 加入了falcon-mail和urlooker的功能，导入了url的数据库schema.sql，和相关的stmp信息
+
 
 
 第一步: 修改变量文件
