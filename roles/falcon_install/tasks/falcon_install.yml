@@ -1,19 +1,19 @@
 ---
-- name: copy mysql docker images
+- name: copy falcon docker images
   copy: src={{ item.src }} dest={{ item.dest }}
   with_items:
-    - {src: 'falcon_0.2.1.tar', dest: '/tmp/falcon_0.2.1.tar'}
+    - {src: 'falcon_v0.2.1.tar', dest: '/tmp/falcon_v0.2.1.tar'}
   tags:
     - docker1
 
 - name: docker import open-falcon images
   shell: docker load -i {{ item }}
   with_items:
-    - /tmp/falcon_0.2.1.tar
+    - /tmp/falcon_v0.2.1.tar
 
 
 - name: rm falcon.tar
-  shell: rm -rf /tmp/falcon_0.2.1.tar
+  shell: rm -rf /tmp/falcon_v0.2.1.tar
 
 - name: create mysql_data directory
   file: path={{ falcon_data_path }} state=directory recurse=yes

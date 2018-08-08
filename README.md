@@ -7,6 +7,7 @@
 - falcon_0.2.1.tar和mysql_5.5.tar需要手动上传
 - ansible版本为2.4
 - 加入了falcon-mail和urlooker的功能，导入了url的数据库schema.sql，和相关的stmp信息
+- 访问的地址默认为: http://*.*.*.*:8081,默认的管理员为注册的第一个root用户
 
 
 

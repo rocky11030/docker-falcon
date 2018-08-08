@@ -1,5 +1,5 @@
 [falcon]
-10.2.8.230 ansible_ssh_user=root ansible_ssh_pass=Neunn2016
+10.8.52.8 ansible_ssh_user=root ansible_ssh_pass=
 
 #[total:children]
 #falcon

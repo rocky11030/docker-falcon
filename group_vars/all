@@ -3,13 +3,13 @@ mysql_dockername: mysql
 mysql_data_path: /opt/open-falcon/mysql
 root_passwd: Neunn@123
 root_host: "%"
-database: zabbix
+#database: falcon
 database_port: 3306
 
 #falcon docker
 falcon_data_path: /opt/open-falcon/data
 falcon_dockername: falcon
-falcon_ip: 10.2.8.230
+falcon_ip: 10.8.52.8
 
 #smtp
 smtp_mail: smtp.exmail.qq.com:25 
